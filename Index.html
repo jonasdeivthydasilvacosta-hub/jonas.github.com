@@ -1,0 +1,1212 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Remy - Escola Remy Soares (Presidente Dutra - MA)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        remy: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#1d4ed8',
+                            600: '#1e40af',
+                            700: '#1d3557',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            accent: '#f59e0b',
+                            accentDark: '#d97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-blue-600 selection:text-white">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-header border-b border-slate-200/80 shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo & Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                        <i class="ph-bold ph-books text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">Biblioteca Remy</span>
+                        <span class="text-xs font-semibold text-blue-600 flex items-center gap-1">
+                            <i class="ph-bold ph-map-pin"></i> Escola Remy Soares • Pres. Dutra - MA
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link px-3 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 transition">
+                        Início
+                    </button>
+                    <button onclick="navigateTo('catalogo')" id="nav-catalogo" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition">
+                        Catálogo
+                    </button>
+                    <button onclick="navigateTo('acervos')" id="nav-acervos" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition">
+                        Acervos Especializados
+                    </button>
+                    <button onclick="navigateTo('suporte')" id="nav-suporte" class="nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition">
+                        Suporte & FAQ
+                    </button>
+                </nav>
+
+                <!-- User Area / Login Button -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <div id="logged-user-menu" class="hidden flex items-center gap-3 bg-slate-100 p-1.5 pl-3 rounded-full border border-slate-200">
+                        <span class="text-xs font-semibold text-slate-700" id="user-display-name">Aluno Remy</span>
+                        <button onclick="navigateTo('conta')" class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-xs hover:bg-blue-700 transition shadow-sm" title="Minha Conta">
+                            <i class="ph-bold ph-user"></i>
+                        </button>
+                        <button onclick="logoutUser()" class="text-slate-400 hover:text-red-500 pr-2 transition" title="Sair">
+                            <i class="ph-bold ph-sign-out text-lg"></i>
+                        </button>
+                    </div>
+
+                    <button id="login-btn" onclick="openLoginModal()" class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md shadow-blue-500/10 transition active:scale-95">
+                        <i class="ph-bold ph-sign-in text-lg mr-1.5"></i> Entrar / Entrar Demo
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-slate-600 hover:text-slate-900 p-2 rounded-lg focus:outline-none">
+                        <i id="mobile-menu-icon" class="ph-bold ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-2">
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-base font-semibold text-blue-600 bg-blue-50">Início</button>
+            <button onclick="navigateTo('catalogo'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100">Catálogo</button>
+            <button onclick="navigateTo('acervos'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100">Acervos Especializados</button>
+            <button onclick="navigateTo('suporte'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-100">Suporte & FAQ</button>
+            <div class="pt-2 border-t border-slate-100">
+                <div id="mobile-user-section">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow">
+
+        <!-- SECTION 1: HOME / HERO SECTION -->
+        <section id="section-home" class="view-section">
+            <!-- Hero Banner -->
+            <div class="relative bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-900 text-white overflow-hidden py-16 md:py-24">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="max-w-3xl">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-400/20 text-amber-300 border border-amber-400/30 mb-6">
+                            <i class="ph-fill ph-sparkle"></i> Portal da Biblioteca Escolar Remy Soares
+                        </span>
+                        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight mb-4">
+                            Conhecimento, Cultura e Leitura ao seu alcance.
+                        </h1>
+                        <p class="text-slate-300 text-base md:text-lg mb-8 leading-relaxed">
+                            Seja bem-vindo ao portal oficial da Biblioteca da **Escola Remy Soares** em Presidente Dutra - MA. Explore nosso acervo digital, reserve títulos e consulte seus empréstimos de forma simples.
+                        </p>
+
+                        <!-- Hero Quick Search Bar -->
+                        <div class="bg-white p-2 rounded-2xl shadow-xl flex flex-col md:flex-row gap-2 max-w-2xl border border-white/20">
+                            <div class="flex-grow flex items-center px-3 text-slate-400">
+                                <i class="ph-bold ph-magnifying-glass text-xl mr-2 text-blue-600"></i>
+                                <input id="hero-search-input" type="text" placeholder="Buscar por título, autor, gênero ou disciplina..." class="w-full py-2 bg-transparent text-slate-800 placeholder-slate-400 focus:outline-none text-sm font-medium">
+                            </div>
+                            <button onclick="performHeroSearch()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30">
+                                Buscar Livro
+                            </button>
+                        </div>
+
+                        <!-- Quick Tags -->
+                        <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                            <span class="text-slate-400">Mais buscados:</span>
+                            <button onclick="quickFilterSearch('Literatura Maranhense')" class="hover:underline text-amber-300">#LiteraturaMaranhense</button>
+                            <button onclick="quickFilterSearch('Didático')" class="hover:underline text-blue-300">#Didáticos</button>
+                            <button onclick="quickFilterSearch('Clássicos')" class="hover:underline text-blue-300">#Clássicos</button>
+                            <button onclick="quickFilterSearch('Manga')" class="hover:underline text-blue-300">#Mangás/HQs</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Library Quick Stats / Info -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-6 rounded-2xl shadow-lg border border-slate-200/80">
+                    <div class="flex items-center gap-4 border-r border-slate-100 pr-2">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold">
+                            <i class="ph-bold ph-book-bookmark"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xl font-extrabold text-slate-900" id="stat-books-count">1.250+</span>
+                            <span class="text-xs text-slate-500 font-medium">Livros no Acervo</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 border-r border-slate-100 pr-2">
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl font-bold">
+                            <i class="ph-bold ph-student"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xl font-extrabold text-slate-900">800+</span>
+                            <span class="text-xs text-slate-500 font-medium">Alunos Atendidos</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 border-r border-slate-100 pr-2">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl font-bold">
+                            <i class="ph-bold ph-clock-afternoon"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xl font-extrabold text-slate-900">14 Dias</span>
+                            <span class="text-xs text-slate-500 font-medium">Prazo Empréstimo</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold">
+                            <i class="ph-bold ph-map-pin-line"></i>
+                        </div>
+                        <div>
+                            <span class="block text-sm font-bold text-slate-900">Pres. Dutra - MA</span>
+                            <span class="text-xs text-slate-500 font-medium">Escola Remy Soares</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Highlights -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900">Destaques da Biblioteca Remy</h2>
+                        <p class="text-slate-500 text-sm mt-1">Os livros mais procurados pelos alunos da Escola Remy Soares nesta semana.</p>
+                    </div>
+                    <button onclick="navigateTo('catalogo')" class="mt-4 md:mt-0 text-sm font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
+                        Ver catálogo completo <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Featured Books Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="home-featured-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CATALOGO & SEARCH -->
+        <section id="section-catalogo" class="view-section hidden py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Title & Filter Controls Header -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h1 class="text-2xl font-extrabold text-slate-900">Catálogo de Livros</h1>
+                            <p class="text-slate-500 text-sm">Pesquise, filtre e solicite empréstimos de livros disponíveis na escola.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg" id="catalog-count-badge">Mostrando 0 livros</span>
+                        </div>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <!-- Search Input -->
+                        <div class="relative md:col-span-2">
+                            <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" id="catalog-search" oninput="applyCatalogFilters()" placeholder="Buscar por título, autor ou código..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition">
+                        </div>
+
+                        <!-- Genre Filter -->
+                        <div>
+                            <select id="catalog-genre" onchange="applyCatalogFilters()" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="ALL">Todos os Gêneros</option>
+                                <option value="Literatura Maranhense">Literatura Maranhense</option>
+                                <option value="Literatura Brasileira">Literatura Brasileira</option>
+                                <option value="Didático">Didáticos Escolar</option>
+                                <option value="Infantojuvenil">Infantojuvenil</option>
+                                <option value="Ciências & História">Ciências & História</option>
+                                <option value="Quadrinhos & Mangás">Quadrinhos & Mangás</option>
+                            </select>
+                        </div>
+
+                        <!-- Availability Filter -->
+                        <div>
+                            <select id="catalog-status" onchange="applyCatalogFilters()" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="ALL">Todas Disponibilidades</option>
+                                <option value="DISPONIVEL">Disponíveis Agora</option>
+                                <option value="EMPRESTADO">Emprestados</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catalog Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="catalog-grid">
+                    <!-- Cards added via JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="catalog-empty" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300">
+                    <i class="ph-duotone ph-book-open-text text-5xl text-slate-300 mb-3"></i>
+                    <h3 class="text-lg font-bold text-slate-700">Nenhum livro encontrado</h3>
+                    <p class="text-slate-500 text-sm mt-1">Tente ajustar seus termos de busca ou filtros.</p>
+                    <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl text-sm font-semibold transition">
+                        Limpar Filtros
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ACERVOS (COLLECTIONS) -->
+        <section id="section-acervos" class="view-section hidden py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h1 class="text-3xl font-extrabold text-slate-900">Acervos Especializados</h1>
+                    <p class="text-slate-500 text-sm mt-2">
+                        Explore coleções organizadas para facilitar o aprendizado e o incentivo à leitura na Escola Remy Soares.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Collection Card 1 -->
+                    <div class="bg-gradient-to-br from-amber-500 to-amber-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-white/10 group-hover:scale-110 transition duration-300">
+                            <i class="ph-fill ph-feather text-9xl"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider text-amber-100">Regional & Local</span>
+                        <h3 class="text-2xl font-extrabold mt-3 mb-2">Literatura Maranhense</h3>
+                        <p class="text-amber-100 text-sm mb-6">Obras marcantes de autores maranhenses como Aluísio Azevedo, Gonçalves Dias, Maria Firmina dos Reis e literatura local de Presidente Dutra.</p>
+                        <button onclick="quickFilterSearch('Literatura Maranhense')" class="px-4 py-2 bg-white text-amber-800 rounded-xl text-xs font-bold hover:bg-amber-50 transition shadow">
+                            Explorar Acervo <i class="ph-bold ph-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Collection Card 2 -->
+                    <div class="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-white/10 group-hover:scale-110 transition duration-300">
+                            <i class="ph-fill ph-student text-9xl"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider text-blue-100">Ensino & Estudo</span>
+                        <h3 class="text-2xl font-extrabold mt-3 mb-2">Didáticos Escolares</h3>
+                        <p class="text-blue-100 text-sm mb-6">Livros de apoio para Matemática, Português, História, Geografia, Biologia, Química e Física para o ensino fundamental e médio.</p>
+                        <button onclick="quickFilterSearch('Didático')" class="px-4 py-2 bg-white text-blue-900 rounded-xl text-xs font-bold hover:bg-blue-50 transition shadow">
+                            Explorar Acervo <i class="ph-bold ph-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Collection Card 3 -->
+                    <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                        <div class="absolute -right-4 -bottom-4 text-white/10 group-hover:scale-110 transition duration-300">
+                            <i class="ph-fill ph-smiley text-9xl"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold uppercase tracking-wider text-emerald-100">Juvenil & HQs</span>
+                        <h3 class="text-2xl font-extrabold mt-3 mb-2">Infantojuvenil & Mangás</h3>
+                        <p class="text-emerald-100 text-sm mb-6">Histórias em quadrinhos, turmas da Mônica, mangás e sagas infantojuvenis para alimentar a imaginação dos nossos estudantes.</p>
+                        <button onclick="quickFilterSearch('Quadrinhos & Mangás')" class="px-4 py-2 bg-white text-emerald-900 rounded-xl text-xs font-bold hover:bg-emerald-50 transition shadow">
+                            Explorar Acervo <i class="ph-bold ph-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collection Info Box -->
+                <div class="mt-12 bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-3xl shrink-0">
+                            <i class="ph-bold ph-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">Sugestão de Compra para o Acervo?</h4>
+                            <p class="text-slate-500 text-sm">Alunos e professores da Escola Remy Soares podem sugerir novos títulos para compra pela biblioteca.</p>
+                        </div>
+                    </div>
+                    <button onclick="navigateTo('suporte')" class="shrink-0 px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-sm font-bold transition">
+                        Fazer uma Indicação
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: MINHA CONTA / DASHBOARD -->
+        <section id="section-conta" class="view-section hidden py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Not Logged Warning -->
+                <div id="account-not-logged" class="bg-white p-10 rounded-2xl border border-slate-200 text-center max-w-xl mx-auto shadow-sm">
+                    <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto text-3xl mb-4">
+                        <i class="ph-bold ph-user-lock"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900 mb-2">Acesso Restrito</h2>
+                    <p class="text-slate-500 text-sm mb-6">Você precisa estar conectado com sua conta de aluno ou professor para ver seus livros alugados.</p>
+                    <button onclick="openLoginModal()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition shadow-md shadow-blue-500/20">
+                        Fazer Login Agora
+                    </button>
+                </div>
+
+                <!-- Logged Dashboard -->
+                <div id="account-dashboard" class="hidden space-y-8">
+                    <!-- User Profile Card -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+                            <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-3xl font-extrabold shadow-md" id="user-avatar-initials">
+                                AR
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-center md:justify-start gap-2">
+                                    <h2 class="text-2xl font-bold text-slate-900" id="dash-user-name">Aluno Remy</h2>
+                                    <span class="px-2.5 py-0.5 text-xs font-bold bg-blue-100 text-blue-700 rounded-md" id="dash-user-role">Estudante</span>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-1" id="dash-user-info">Matrícula: 2026-RS-042 • 9º Ano Ensino Fundamental</p>
+                                <p class="text-xs text-slate-400">Escola Municipal/Estadual Remy Soares - Presidente Dutra/MA</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center min-w-[110px]">
+                                <span class="block text-2xl font-extrabold text-blue-600" id="dash-borrowed-count">0</span>
+                                <span class="text-xs text-slate-500 font-medium">Livros Comigo</span>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center min-w-[110px]">
+                                <span class="block text-2xl font-extrabold text-emerald-600" id="dash-history-count">0</span>
+                                <span class="text-xs text-slate-500 font-medium">Lidos no Ano</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Currently Borrowed Books Section -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="ph-bold ph-book-open text-blue-600"></i> Livros Emprestados Atualmente
+                                </h3>
+                                <p class="text-slate-500 text-xs">Mantenha as devoluções em dia para evitar suspensão de novos empréstimos.</p>
+                            </div>
+                        </div>
+
+                        <div id="borrowed-list" class="space-y-4">
+                            <!-- Items added dynamically via JS -->
+                        </div>
+
+                        <div id="borrowed-empty" class="hidden text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                            <i class="ph-duotone ph-books text-4xl text-slate-300 mb-2"></i>
+                            <p class="text-slate-600 font-semibold text-sm">Você não possui livros emprestados no momento.</p>
+                            <button onclick="navigateTo('catalogo')" class="mt-3 px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition">
+                                Explorar o Catálogo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reading History -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <i class="ph-bold ph-clock-counter-clockwise text-amber-500"></i> Histórico Recente
+                        </h3>
+                        <div class="divide-y divide-slate-100 text-sm" id="reading-history-list">
+                            <!-- History item placeholder -->
+                            <div class="py-3 flex justify-between items-center text-xs text-slate-500">
+                                <span>Nenhuma atividade recente registrada neste dispositivo.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: SUPORTE & ATENDIMENTO -->
+        <section id="section-suporte" class="view-section hidden py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h1 class="text-3xl font-extrabold text-slate-900">Atendimento & Suporte</h1>
+                    <p class="text-slate-500 text-sm mt-2">Dúvidas sobre o funcionamento da biblioteca da Escola Remy Soares? Fale com nossa equipe de bibliotecários.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Contact Form -->
+                    <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Enviar Mensagem à Biblioteca</h3>
+                        <form onsubmit="handleSupportSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Seu Nome</label>
+                                    <input type="text" required id="sup-name" placeholder="Ex: Maria Silva" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Perfil</label>
+                                    <select id="sup-role" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option>Aluno(a)</option>
+                                        <option>Professor(a)</option>
+                                        <option>Pai / Responsável</option>
+                                        <option>Outro</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Assunto</label>
+                                <input type="text" required id="sup-subject" placeholder="Ex: Dúvida sobre prazo ou sugestão de livro" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Mensagem</label>
+                                <textarea required id="sup-message" rows="4" placeholder="Escreva sua dúvida ou solicitação..." class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
+                                <i class="ph-bold ph-paper-plane-tilt"></i> Enviar Mensagem
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- FAQ & Info Sidebar -->
+                    <div class="space-y-6">
+                        <!-- Location & Hours Box -->
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-md">
+                            <h4 class="font-bold text-lg mb-4 flex items-center gap-2">
+                                <i class="ph-bold ph-buildings text-amber-400"></i> Localização & Horários
+                            </h4>
+                            <div class="space-y-3 text-xs text-slate-300">
+                                <p class="flex items-start gap-2">
+                                    <i class="ph-bold ph-map-pin text-blue-400 text-base shrink-0 mt-0.5"></i>
+                                    <span>Escola Municipal / Estadual Remy Soares<br>Presidente Dutra - Maranhão</span>
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <i class="ph-bold ph-clock text-blue-400 text-base shrink-0"></i>
+                                    <span>Segunda a Sexta: 07:30 às 17:30</span>
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <i class="ph-bold ph-envelope text-blue-400 text-base shrink-0"></i>
+                                    <span>biblioteca.remysoares@presdutra.edu.br</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Quick FAQ -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h4 class="font-bold text-slate-900 mb-3 text-sm">Perguntas Frequentes (FAQ)</h4>
+                            <div class="space-y-3 text-xs">
+                                <div>
+                                    <strong class="text-slate-800 block mb-0.5">Quantos livros posso pegar?</strong>
+                                    <span class="text-slate-500">Cada aluno pode pegar até 2 livros simultaneamente pelo prazo de 14 dias.</span>
+                                </div>
+                                <div class="pt-2 border-t border-slate-100">
+                                    <strong class="text-slate-800 block mb-0.5">Como renovar o prazo?</strong>
+                                    <span class="text-slate-500">Acesse a aba "Minha Conta" e clique em "Renovar" antes da data de vencimento.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL 1: LOGIN & DEMO PRESETS -->
+    <div id="login-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+                <i class="ph-bold ph-x text-xl"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-2">
+                    <i class="ph-bold ph-user-circle"></i>
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-900">Acessar Biblioteca Remy</h3>
+                <p class="text-xs text-slate-500 mt-1">Identifique-se com sua conta escolar</p>
+            </div>
+
+            <!-- Fast Demo Login Buttons -->
+            <div class="bg-blue-50 p-3 rounded-2xl mb-6 border border-blue-100">
+                <span class="block text-xs font-bold text-blue-800 mb-2 text-center">Acesso Rápido para Teste (Demo):</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="loginAsDemo('aluno')" class="px-3 py-2 bg-white text-blue-700 font-bold rounded-xl text-xs hover:bg-blue-600 hover:text-white transition shadow-sm border border-blue-200 flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-student"></i> Aluno Remy
+                    </button>
+                    <button onclick="loginAsDemo('professor')" class="px-3 py-2 bg-white text-indigo-700 font-bold rounded-xl text-xs hover:bg-indigo-600 hover:text-white transition shadow-sm border border-indigo-200 flex items-center justify-center gap-1">
+                        <i class="ph-bold ph-chalkboard-teacher"></i> Prof. João
+                    </button>
+                </div>
+            </div>
+
+            <form onsubmit="handleCustomLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Matrícula ou E-mail Escolar</label>
+                    <input type="text" id="login-input-id" required placeholder="Ex: 2026-RS-042" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Senha</label>
+                    <input type="password" id="login-input-pass" required placeholder="••••••••" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition shadow-md shadow-blue-500/20">
+                    Entrar na Conta
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: BOOK DETAILS & BORROW ACTION -->
+    <div id="book-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative">
+            <button onclick="closeBookModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+                <i class="ph-bold ph-x text-xl"></i>
+            </button>
+
+            <div id="book-modal-content">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-white border-t border-slate-800 py-10 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+                        <i class="ph-bold ph-books text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-base font-bold block leading-tight">Biblioteca Remy</span>
+                        <span class="text-xs text-slate-400">Escola Remy Soares • Presidente Dutra - MA</span>
+                    </div>
+                </div>
+                <p class="text-xs text-slate-500 text-center md:text-right">
+                    © 2026 Escola Municipal/Estadual Remy Soares. Todos os direitos reservados.<br>
+                    Desenvolvido para incentivo à leitura e educação local em Presidente Dutra.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // --- 1. INITIAL SAMPLE DATA (Pre-populated) ---
+        const SAMPLE_BOOKS = [
+            {
+                id: 'b1',
+                title: 'O Cortiço',
+                author: 'Aluísio Azevedo',
+                genre: 'Literatura Maranhense',
+                status: 'DISPONIVEL', // DISPONIVEL | EMPRESTADO
+                year: '1890',
+                code: 'LIT-MA-001',
+                coverColor: 'from-amber-600 to-amber-800',
+                desc: 'Obra-prima do Naturalismo brasileiro escrita pelo autor maranhense Aluísio Azevedo. Retrata a vida dos moradores de um cortiço no Rio de Janeiro do século XIX.'
+            },
+            {
+                id: 'b2',
+                title: 'Úrsula',
+                author: 'Maria Firmina dos Reis',
+                genre: 'Literatura Maranhense',
+                status: 'DISPONIVEL',
+                year: '1859',
+                code: 'LIT-MA-002',
+                coverColor: 'from-amber-700 to-amber-900',
+                desc: 'Primeiro romance abolicionista do Brasil, escrito pela maranhense Maria Firmina dos Reis. Destaque fundamental da literatura do Maranhão.'
+            },
+            {
+                id: 'b3',
+                title: 'Dom Casmurro',
+                author: 'Machado de Assis',
+                genre: 'Literatura Brasileira',
+                status: 'DISPONIVEL',
+                year: '1899',
+                code: 'LIT-BR-010',
+                coverColor: 'from-blue-700 to-indigo-900',
+                desc: 'A clássica história de Bentinho, Capitu e a eterna dúvida sobre a traição. Leitura indispensável para estudantes.'
+            },
+            {
+                id: 'b4',
+                title: 'História do Maranhão e Pres. Dutra',
+                author: 'Professores de História',
+                genre: 'Ciências & História',
+                status: 'DISPONIVEL',
+                year: '2021',
+                code: 'HIS-MA-005',
+                coverColor: 'from-emerald-700 to-teal-900',
+                desc: 'Material didático especial sobre a formação histórica do estado do Maranhão e o desenvolvimento do município de Presidente Dutra.'
+            },
+            {
+                id: 'b5',
+                title: 'Matemática e Suas Aplicações - 9º Ano',
+                author: 'Editora Escolar Remy',
+                genre: 'Didático',
+                status: 'DISPONIVEL',
+                year: '2024',
+                code: 'DID-MAT-09',
+                coverColor: 'from-sky-600 to-blue-800',
+                desc: 'Livro didático de apoio para os alunos da Escola Remy Soares com exercícios e problemas práticos.'
+            },
+            {
+                id: 'b6',
+                title: 'Turma da Mônica - Aventures na Amazônia',
+                author: 'Mauricio de Sousa',
+                genre: 'Quadrinhos & Mangás',
+                status: 'DISPONIVEL',
+                year: '2022',
+                code: 'HQ-MON-012',
+                coverColor: 'from-red-500 to-rose-700',
+                desc: 'Edição especial colorida em quadrinhos focada no meio ambiente e na diversidade brasileira.'
+            },
+            {
+                id: 'b7',
+                title: 'Vidas Secas',
+                author: 'Graciliano Ramos',
+                genre: 'Literatura Brasileira',
+                status: 'EMPRESTADO',
+                year: '1938',
+                code: 'LIT-BR-015',
+                coverColor: 'from-orange-600 to-amber-800',
+                desc: 'Retrato emocionante da família de Fabiano em sua travessia pelo sertão nordestino.'
+            },
+            {
+                id: 'b8',
+                title: 'O Pequeno Príncipe',
+                author: 'Antoine de Saint-Exupéry',
+                genre: 'Infantojuvenil',
+                status: 'DISPONIVEL',
+                year: '1943',
+                code: 'INF-003',
+                coverColor: 'from-indigo-600 to-purple-800',
+                desc: 'Uma história poética e filosófica sobre amizade, amor e crescimento.'
+            }
+        ];
+
+        // --- 2. STATE MANAGEMENT & LOCAL STORAGE ---
+        let books = [];
+        let currentUser = null; // { name, id, role }
+
+        function initData() {
+            // Load Books from localStorage or fallback
+            const storedBooks = localStorage.getItem('remy_library_books');
+            if (storedBooks) {
+                books = JSON.parse(storedBooks);
+            } else {
+                books = SAMPLE_BOOKS;
+                saveBooks();
+            }
+
+            // Load User Session from localStorage
+            const storedUser = localStorage.getItem('remy_library_user');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+            }
+
+            updateUserUI();
+            renderFeaturedHome();
+            renderCatalog();
+            renderDashboard();
+        }
+
+        function saveBooks() {
+            localStorage.setItem('remy_library_books', JSON.stringify(books));
+        }
+
+        function saveUser() {
+            if (currentUser) {
+                localStorage.setItem('remy_library_user', JSON.stringify(currentUser));
+            } else {
+                localStorage.removeItem('remy_library_user');
+            }
+        }
+
+        // --- 3. NAVIGATION LOGIC ---
+        function navigateTo(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            
+            // Show target section
+            const target = document.getElementById(`section-${sectionId}`);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            // Update Header Nav Styling
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                btn.className = 'nav-link px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition';
+            });
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            if (activeBtn) {
+                activeBtn.className = 'nav-link px-3 py-2 rounded-lg text-sm font-semibold text-blue-600 bg-blue-50 transition';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- 4. CATALOG & HOME RENDERERS ---
+        function renderFeaturedHome() {
+            const container = document.getElementById('home-featured-grid');
+            if (!container) return;
+
+            // Pick first 4 books
+            const featured = books.slice(0, 4);
+            container.innerHTML = featured.map(book => createBookCardHTML(book)).join('');
+        }
+
+        function renderCatalog(filteredList = books) {
+            const grid = document.getElementById('catalog-grid');
+            const empty = document.getElementById('catalog-empty');
+            const countBadge = document.getElementById('catalog-count-badge');
+
+            if (!grid) return;
+
+            countBadge.textContent = `Mostrando ${filteredList.length} livro(s)`;
+
+            if (filteredList.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+            } else {
+                empty.classList.add('hidden');
+                grid.innerHTML = filteredList.map(book => createBookCardHTML(book)).join('');
+            }
+
+            // Update stats counter
+            const statCounter = document.getElementById('stat-books-count');
+            if (statCounter) statCounter.textContent = `${books.length}+`;
+        }
+
+        function createBookCardHTML(book) {
+            const isAvailable = book.status === 'DISPONIVEL';
+            const statusBadge = isAvailable 
+                ? `<span class="px-2.5 py-1 text-xs font-bold bg-emerald-100 text-emerald-700 rounded-full flex items-center gap-1"><i class="ph-bold ph-check-circle"></i> Disponível</span>`
+                : `<span class="px-2.5 py-1 text-xs font-bold bg-amber-100 text-amber-800 rounded-full flex items-center gap-1"><i class="ph-bold ph-clock"></i> Emprestado</span>`;
+
+            return `
+                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between overflow-hidden group">
+                    <div>
+                        <!-- Cover Placeholder Visual -->
+                        <div class="h-44 bg-gradient-to-br ${book.coverColor || 'from-blue-600 to-indigo-800'} p-4 flex flex-col justify-between text-white relative">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-black/20 backdrop-blur-md px-2 py-0.5 rounded w-max">${book.genre}</span>
+                            <div>
+                                <h4 class="font-extrabold text-base leading-tight group-hover:underline line-clamp-2">${book.title}</h4>
+                                <span class="text-xs opacity-80 block mt-0.5">${book.author}</span>
+                            </div>
+                        </div>
+
+                        <!-- Info Content -->
+                        <div class="p-4 space-y-2">
+                            <div class="flex items-center justify-between">
+                                ${statusBadge}
+                                <span class="text-[11px] text-slate-400 font-mono">${book.code}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 line-clamp-2 mt-2">${book.desc}</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 pt-0">
+                        <button onclick="openBookModal('${book.id}')" class="w-full py-2 bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+                            <i class="ph-bold ph-eye"></i> Ver Detalhes / Reservar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Filter Logic
+        function applyCatalogFilters() {
+            const searchVal = document.getElementById('catalog-search').value.toLowerCase();
+            const genreVal = document.getElementById('catalog-genre').value;
+            const statusVal = document.getElementById('catalog-status').value;
+
+            const filtered = books.filter(b => {
+                const matchesSearch = b.title.toLowerCase().includes(searchVal) || 
+                                      b.author.toLowerCase().includes(searchVal) || 
+                                      b.code.toLowerCase().includes(searchVal);
+                
+                const matchesGenre = (genreVal === 'ALL') || (b.genre === genreVal);
+                const matchesStatus = (statusVal === 'ALL') || (b.status === statusVal);
+
+                return matchesSearch && matchesGenre && matchesStatus;
+            });
+
+            renderCatalog(filtered);
+        }
+
+        function performHeroSearch() {
+            const term = document.getElementById('hero-search-input').value;
+            navigateTo('catalogo');
+            document.getElementById('catalog-search').value = term;
+            applyCatalogFilters();
+        }
+
+        function quickFilterSearch(genreName) {
+            navigateTo('catalogo');
+            document.getElementById('catalog-genre').value = genreName;
+            document.getElementById('catalog-search').value = '';
+            applyCatalogFilters();
+        }
+
+        function resetFilters() {
+            document.getElementById('catalog-search').value = '';
+            document.getElementById('catalog-genre').value = 'ALL';
+            document.getElementById('catalog-status').value = 'ALL';
+            applyCatalogFilters();
+        }
+
+        // --- 5. BOOK ACTION & BORROWING SYSTEM ---
+        function openBookModal(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            const isAvailable = book.status === 'DISPONIVEL';
+            const modalContent = document.getElementById('book-modal-content');
+
+            modalContent.innerHTML = `
+                <div class="space-y-4">
+                    <div class="h-32 rounded-2xl bg-gradient-to-br ${book.coverColor} p-4 text-white flex flex-col justify-end">
+                        <span class="text-xs font-bold opacity-80 uppercase">${book.genre}</span>
+                        <h3 class="text-xl font-extrabold">${book.title}</h3>
+                        <p class="text-xs opacity-90">${book.author} (${book.year})</p>
+                    </div>
+
+                    <div class="space-y-2 text-xs text-slate-600">
+                        <p><strong>Código de Tombo:</strong> <span class="font-mono">${book.code}</span></p>
+                        <p><strong>Descrição:</strong> ${book.desc}</p>
+                        <p><strong>Localização:</strong> Prateleira Remy Soares - Seção ${book.genre}</p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex flex-col gap-2">
+                        ${isAvailable ? `
+                            <button onclick="borrowBook('${book.id}')" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2">
+                                <i class="ph-bold ph-hand-holding-book"></i> Confirmar Empréstimo (14 Dias)
+                            </button>
+                        ` : `
+                            <div class="bg-amber-50 text-amber-800 p-3 rounded-xl text-xs font-medium text-center">
+                                Este livro já se encontra emprestado. Aguarde a devolução para nova reserva.
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('book-modal').classList.remove('hidden');
+        }
+
+        function closeBookModal() {
+            document.getElementById('book-modal').classList.add('hidden');
+        }
+
+        function borrowBook(bookId) {
+            if (!currentUser) {
+                closeBookModal();
+                showToast('Você precisa fazer login para pegar um livro!', 'warning');
+                openLoginModal();
+                return;
+            }
+
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            if (book.status !== 'DISPONIVEL') {
+                showToast('Este livro já está emprestado!', 'error');
+                return;
+            }
+
+            // Perform Loan
+            book.status = 'EMPRESTADO';
+            book.borrowedBy = currentUser.id;
+            book.borrowDate = new Date().toISOString();
+            
+            // Return date + 14 days
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + 14);
+            book.dueDate = dueDate.toISOString();
+
+            saveBooks();
+            closeBookModal();
+
+            showToast(`Sucesso! "${book.title}" foi emprestado para você por 14 dias.`, 'success');
+            renderCatalog();
+            renderFeaturedHome();
+            renderDashboard();
+        }
+
+        function returnBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            book.status = 'DISPONIVEL';
+            delete book.borrowedBy;
+            delete book.borrowDate;
+            delete book.dueDate;
+
+            saveBooks();
+            showToast(`O livro "${book.title}" foi devolvido com sucesso!`, 'success');
+            renderCatalog();
+            renderFeaturedHome();
+            renderDashboard();
+        }
+
+        function renewBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+
+            // Add 7 more days
+            const currentDue = new Date(book.dueDate);
+            currentDue.setDate(currentDue.getDate() + 7);
+            book.dueDate = currentDue.toISOString();
+
+            saveBooks();
+            showToast(`Prazo de "${book.title}" renovado por mais 7 dias!`, 'success');
+            renderDashboard();
+        }
+
+        // --- 6. USER AUTHENTICATION & LOGIN LOGIC ---
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function loginAsDemo(type) {
+            if (type === 'aluno') {
+                currentUser = {
+                    id: '2026-RS-042',
+                    name: 'Aluno Remy Soares',
+                    role: 'Estudante (9º Ano)',
+                    initials: 'AR'
+                };
+            } else {
+                currentUser = {
+                    id: 'PROF-2026-08',
+                    name: 'Prof. João Silva',
+                    role: 'Docente - Língua Portuguesa',
+                    initials: 'JS'
+                };
+            }
+
+            saveUser();
+            updateUserUI();
+            closeLoginModal();
+            showToast(`Bem-vindo, ${currentUser.name}!`, 'success');
+            renderDashboard();
+        }
+
+        function handleCustomLogin(e) {
+            e.preventDefault();
+            const id = document.getElementById('login-input-id').value;
+            
+            currentUser = {
+                id: id,
+                name: `Usuário (${id})`,
+                role: 'Aluno / Usuário',
+                initials: 'US'
+            };
+
+            saveUser();
+            updateUserUI();
+            closeLoginModal();
+            showToast('Login efetuado com sucesso!', 'success');
+            renderDashboard();
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            saveUser();
+            updateUserUI();
+            showToast('Você saiu da sua conta.', 'info');
+            renderDashboard();
+        }
+
+        function updateUserUI() {
+            const loggedMenu = document.getElementById('logged-user-menu');
+            const loginBtn = document.getElementById('login-btn');
+            const userNameDisplay = document.getElementById('user-display-name');
+            const mobileSection = document.getElementById('mobile-user-section');
+
+            if (currentUser) {
+                if (loggedMenu) loggedMenu.classList.remove('hidden');
+                if (loginBtn) loginBtn.classList.add('hidden');
+                if (userNameDisplay) userNameDisplay.textContent = currentUser.name;
+
+                if (mobileSection) {
+                    mobileSection.innerHTML = `
+                        <div class="flex items-center justify-between p-2">
+                            <span class="text-xs font-bold text-slate-700">${currentUser.name}</span>
+                            <button onclick="logoutUser()" class="text-xs font-bold text-red-600">Sair</button>
+                        </div>
+                    `;
+                }
+            } else {
+                if (loggedMenu) loggedMenu.classList.add('hidden');
+                if (loginBtn) loginBtn.classList.remove('hidden');
+
+                if (mobileSection) {
+                    mobileSection.innerHTML = `
+                        <button onclick="openLoginModal(); toggleMobileMenu()" class="w-full text-center px-4 py-2 bg-blue-600 text-white font-bold rounded-xl text-sm">
+                            Fazer Login
+                        </button>
+                    `;
+                }
+            }
+        }
+
+        // --- 7. ACCOUNT DASHBOARD RENDERER ---
+        function renderDashboard() {
+            const notLogged = document.getElementById('account-not-logged');
+            const dashboard = document.getElementById('account-dashboard');
+
+            if (!currentUser) {
+                if (notLogged) notLogged.classList.remove('hidden');
+                if (dashboard) dashboard.classList.add('hidden');
+                return;
+            }
+
+            if (notLogged) notLogged.classList.add('hidden');
+            if (dashboard) dashboard.classList.remove('hidden');
+
+            // Populate user info
+            document.getElementById('dash-user-name').textContent = currentUser.name;
+            document.getElementById('dash-user-role').textContent = currentUser.role;
+            document.getElementById('dash-user-info').textContent = `Matrícula/ID: ${currentUser.id}`;
+            document.getElementById('user-avatar-initials').textContent = currentUser.initials || 'RS';
+
+            // Filter books borrowed by current user
+            const myBooks = books.filter(b => b.borrowedBy === currentUser.id);
+
+            document.getElementById('dash-borrowed-count').textContent = myBooks.length;
+            document.getElementById('dash-history-count').textContent = myBooks.length + 2; // Simulated history
+
+            const borrowedList = document.getElementById('borrowed-list');
+            const borrowedEmpty = document.getElementById('borrowed-empty');
+
+            if (myBooks.length === 0) {
+                borrowedList.innerHTML = '';
+                borrowedEmpty.classList.remove('hidden');
+            } else {
+                borrowedEmpty.classList.add('hidden');
+                borrowedList.innerHTML = myBooks.map(book => {
+                    const due = new Date(book.dueDate);
+                    const formattedDate = due.toLocaleDateString('pt-BR');
+
+                    return `
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                                    <i class="ph-bold ph-book"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">${book.title}</h4>
+                                    <span class="text-xs text-slate-500">${book.author} • Tombo: ${book.code}</span>
+                                    <span class="block text-xs font-semibold text-amber-700 mt-0.5">
+                                        <i class="ph-bold ph-calendar"></i> Devolução prevista: ${formattedDate}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="renewBook('${book.id}')" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg text-xs font-bold transition">
+                                    Renovar (+7 dias)
+                                </button>
+                                <button onclick="returnBook('${book.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition">
+                                    Devolver Livro
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // --- 8. SUPPORT FORM HANDLER ---
+        function handleSupportSubmit(e) {
+            e.preventDefault();
+            showToast('Mensagem enviada com sucesso para a equipe da biblioteca!', 'success');
+            document.getElementById('sup-subject').value = '';
+            document.getElementById('sup-message').value = '';
+        }
+
+        // --- 9. TOAST NOTIFICATIONS ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            
+            let bg = 'bg-slate-900 text-white';
+            if (type === 'success') bg = 'bg-emerald-600 text-white';
+            if (type === 'warning') bg = 'bg-amber-500 text-white';
+            if (type === 'error') bg = 'bg-red-600 text-white';
+
+            toast.className = `${bg} px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 transform translate-y-2 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class="ph-bold ph-info text-base"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Initialize App on Window Load
+        window.onload = function() {
+            initData();
+        };
+    </script>
+</body>
+</html>
+```
